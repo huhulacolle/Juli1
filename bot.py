@@ -18,7 +18,7 @@ async def voc(message: discord.message.Message):
         msg = r.recognize_google(audio, language='fr-FR')
         os.remove(str(message.id) + ".ogg")
         os.remove(str(message.id) + ".wav")
-        await message.channel.send(str(message.author) + " à dit : " + msg)
+        await message.channel.send(msg + " - " + str(message.author))
 
 r = speech_recognition.Recognizer()
 
@@ -46,7 +46,11 @@ async def on_message(message: discord.message.Message):
             print(e)
             await message.channel.send('Erreur de reconnaissance vocale')
 
-    if message.content.lower() == "dit coucou":
+    if (message.content.startswith("dit coucou")):
         await message.channel.send('connard')
+    
+    if (message.content == "github"):
+        await message.channel.send('https://github.com/huhulacolle/juli1/')
+    
 
 client.run(os.getenv('TOKEN'))
