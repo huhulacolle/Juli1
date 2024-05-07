@@ -6,6 +6,20 @@ import requests
 import speech_recognition
 from pydub import AudioSegment
 
+async def voc(message: discord.message.Message):
+    data = requests.get(message.attachments[0].url)
+    with open(str(message.id) + ".ogg", "wb") as file:
+        file.write(data.content)
+    AudioSegment.from_ogg(str(message.id) + ".ogg").export(str(message.id) + ".wav", format="wav")
+    
+    with speech_recognition.AudioFile(str(message.id) + ".wav") as source:
+        r.adjust_for_ambient_noise(source, duration=0.2)
+        audio = r.listen(source)
+        msg = r.recognize_google(audio, language='fr-FR')
+        os.remove(str(message.id) + ".ogg")
+        os.remove(str(message.id) + ".wav")
+        await message.channel.send(str(message.author) + " à dit : " + msg)
+
 r = speech_recognition.Recognizer()
 
 intents = discord.Intents.default()
@@ -36,17 +50,3 @@ async def on_message(message: discord.message.Message):
         await message.channel.send('connard')
 
 client.run(os.getenv('TOKEN'))
-
-async def voc(message: discord.message.Message):
-    data = requests.get(message.attachments[0].url)
-    with open(str(message.id) + ".ogg", "wb") as file:
-        file.write(data.content)
-    AudioSegment.from_ogg(str(message.id) + ".ogg").export(str(message.id) + ".wav", format="wav")
-    
-    with speech_recognition.AudioFile(str(message.id) + ".wav") as source:
-        r.adjust_for_ambient_noise(source, duration=0.2)
-        audio = r.listen(source)
-        msg = r.recognize_google(audio, language='fr-FR')
-        os.remove(str(message.id) + ".ogg")
-        os.remove(str(message.id) + ".wav")
-        await message.channel.send(str(message.author) + " à dit : " + msg)
