@@ -46,8 +46,8 @@ async def on_message(message: discord.message.Message):
             print(e)
             await message.channel.send('Erreur de reconnaissance vocale')
 
-    if (message.content.startswith("dit coucou")):
-        await message.reply('connard')
+    if (client.user in message.mentions and "coucou" in message.content):
+        await message.channel.send("connard")
     
     if (message.content == "github"):
         await message.channel.send('https://github.com/huhulacolle/juli1/')
